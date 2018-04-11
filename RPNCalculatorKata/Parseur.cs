@@ -12,7 +12,6 @@ namespace RPNCalculatorKata
       private IList<string> Lemes=new List<string>(){ @"^\d+$",@"^\+$",@"^-$",@"^\*$","^/$" };
       public IList<string> Elements { get; set; }
         public string Texte { get; set; }
-
         public void Parser(string texte)
         {
             Texte = texte;
