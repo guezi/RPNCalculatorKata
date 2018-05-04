@@ -42,12 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Double.cs" />
+    <Compile Include="FactoryTerme.cs" />
     <Compile Include="IExpression.cs" />
     <Compile Include="Number.cs" />
     <Compile Include="Operator.cs" />
     <Compile Include="Parseur.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Simple.cs" />
+    <Compile Include="Terme.cs" />
+    <Compile Include="TypeTerme.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

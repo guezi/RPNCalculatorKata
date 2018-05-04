@@ -35,10 +35,10 @@ namespace RPNCalculatorKata.Tests
             Check.That(result).IsFalse();
         }
         [TestCase("125", 125, "125")]
-        [TestCase("1 2 +", 3, "(1+2)")]
-        [TestCase("1 2 *", 2, "(1*2)")]
-        [TestCase("1 2 -", -1, "(1-2)")]
-
+        [TestCase("1 2 +", 3, "(2+1)")]
+        [TestCase("1 2 *", 2, "(2*1)")]
+        [TestCase("1 2 -", 1, "(2-1)")]
+        [TestCase("5 -", -5, "(-1*5)")]
         public void ValidateExpressionTest1(string expression, int result, string infixe)
         {
             var parseur = new Parseur();
@@ -49,17 +49,19 @@ namespace RPNCalculatorKata.Tests
             Check.That(infixe).Equals(display);
 
         }
-        [TestCase("3 5 8 * 7 + *", 141, "(3*((5*8)+7))")]
-        [TestCase("4 2 + 3 -", 3, "((4+2)-3)")]
-        [TestCase("20 5 /", 4, "(20/5)")]
-
+        [TestCase("3 5 8 * 7 + *", 141, "((7+(8*5))*3)")]
+        [TestCase("4 2 + 3 -", -3, "(3-(2+4))")]
+        [TestCase("5 20 /", 4, "(20/5)")]
+        [TestCase("2 2 3 ^ ^", 81, "((3^2)^2)")]
+        [TestCase("3 3 3 ^ ^", 19683, "((3^3)^3)")]
+        [TestCase("4 3 2 ^ ^", 4096, "((2^3)^4)")]
         public void ValidateExpressionTest2(string expression, int result, string infixe)
         {
             var parseur = new Parseur();
             parseur.Parser(expression);
             var value = parseur.GetExpression().GetValue();
             var display = parseur.GetExpression().Display();
-            Check.That(result).Equals(value);
+            Check.That(result).Equals(value); 
             Check.That(infixe).Equals(display);
         }
 
@@ -77,12 +79,23 @@ namespace RPNCalculatorKata.Tests
         {
             var parseur = new Parseur();
             parseur.Parser(expression);
-            Check.ThatCode(() => parseur.GetExpression()).Throws<Exception>().WithMessage($"Expression not correct : {expression.Trim()}");
+            Check.ThatCode(() => parseur.GetExpression()).Throws<Exception>();//.WithMessage($"Expression not correct : {expression.Trim()}");
         }
 
-        [TestCase("1 -", -1, "-1")]
 
-        public void ValidateExpressionTest5(string expression, int result, string infixe)
+        [TestCase("2 2 3 ^ ^", 81)]
+        [TestCase("3 3 3 ^ ^", 19683)]
+
+        public void ValidateExpressionTest5(string expression, int result )
+        {
+            var parseur = new Parseur();
+            parseur.Parser(expression);
+            var value = parseur.GetExpression().GetValue();
+            Check.That(result).Equals(value);
+        }
+
+        [TestCase("1 2 - -", -1, "(-1*(2-1))")]
+        public void ValidateExpressionTest10001(string expression, int result, string infixe)
         {
             var parseur = new Parseur();
             parseur.Parser(expression);
@@ -90,8 +103,7 @@ namespace RPNCalculatorKata.Tests
             var display = parseur.GetExpression().Display();
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);
+
         }
-        [TestCase("1 1 1 + - -", 1, "-2")]
- 
     }
 }

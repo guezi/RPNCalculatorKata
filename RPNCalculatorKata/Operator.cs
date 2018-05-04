@@ -24,21 +24,27 @@ namespace RPNCalculatorKata
         }
         public int GetValue()
         {
+            var value1 = Exp1.GetValue();
+            var value2 = Exp2.GetValue();
             if ("+".Equals(_element.Trim()))
             {
-                return Exp1.GetValue() + Exp2.GetValue();
+                return value1 + value2;
             }
             if ("*".Equals(_element.Trim()))
             {
-                return Exp1.GetValue() *Exp2.GetValue();
+                return value1 *value2;
             }
             if ("-".Equals(_element.Trim()))
             {
-                return Exp1.GetValue() -Exp2.GetValue();
+                return value1 -value2;
             }
             if ("/".Equals(_element.Trim()))
             {
-                return Exp1.GetValue()/ Exp2.GetValue();
+                return value1/ value2;
+            }
+            if ("^".Equals(_element.Trim()))
+            {
+                return (int) Math.Pow(value1 , value2);
             }
             throw new EvaluateException();
         }

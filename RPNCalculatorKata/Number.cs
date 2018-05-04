@@ -9,6 +9,11 @@ namespace RPNCalculatorKata
     class Number : IExpression
     {
         public int Value { get; set; }
+        public Number(string  value)
+        {
+            int.TryParse(value, out var val);
+            Value = val;
+        }
         public Number(int value)
         {
             Value = value;
