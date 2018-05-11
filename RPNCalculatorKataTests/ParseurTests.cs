@@ -43,7 +43,7 @@ namespace RPNCalculatorKata.Tests
         {
             var parseur = new Parseur();
             parseur.Parser(expression);
-            var value = parseur.GetExpression().GetValue();
+            var value = parseur.GetExpression().Evaluate();
             var display = parseur.GetExpression().Display();
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);
@@ -59,7 +59,7 @@ namespace RPNCalculatorKata.Tests
         {
             var parseur = new Parseur();
             parseur.Parser(expression);
-            var value = parseur.GetExpression().GetValue();
+            var value = parseur.GetExpression().Evaluate();
             var display = parseur.GetExpression().Display();
             Check.That(result).Equals(value); 
             Check.That(infixe).Equals(display);
@@ -90,7 +90,7 @@ namespace RPNCalculatorKata.Tests
         {
             var parseur = new Parseur();
             parseur.Parser(expression);
-            var value = parseur.GetExpression().GetValue();
+            var value = parseur.GetExpression().Evaluate();
             Check.That(result).Equals(value);
         }
 
@@ -99,7 +99,7 @@ namespace RPNCalculatorKata.Tests
         {
             var parseur = new Parseur();
             parseur.Parser(expression);
-            var value = parseur.GetExpression().GetValue();
+            var value = parseur.GetExpression().Evaluate();
             var display = parseur.GetExpression().Display();
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);

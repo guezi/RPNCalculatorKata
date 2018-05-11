@@ -22,10 +22,10 @@ namespace RPNCalculatorKata
             Exp1 = exp1;
             Exp2 = exp2;
         }
-        public int GetValue()
+        public int Evaluate()
         {
-            var value1 = Exp1.GetValue();
-            var value2 = Exp2.GetValue();
+            var value1 = Exp1.Evaluate();
+            var value2 = Exp2.Evaluate();
             if ("+".Equals(_element.Trim()))
             {
                 return value1 + value2;

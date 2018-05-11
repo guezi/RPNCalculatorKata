@@ -8,7 +8,7 @@ namespace RPNCalculatorKata
 {
     public interface IExpression
     {
-        int GetValue();
+        int Evaluate(); 
         string Display();
 
     }

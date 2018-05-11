@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace RPNCalculatorKata
 {
-
-
     public class Parseur
     {
         private IList<string> Lemes = new List<string>() { @"^\d+$", @"^\+$", @"^-$", @"^\*$", "^/$", @"^\^$" };
@@ -30,7 +28,6 @@ namespace RPNCalculatorKata
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -44,13 +41,11 @@ namespace RPNCalculatorKata
             foreach (var element in Elements)
             {
                 var ele = FactoryTerme.Instance(element, stack);
-
             }
             if (stack.Count != 1)
             {
                 throw new ArgumentException($"Expression not correct : {Texte?.Trim()}");
             }
-
             return stack.Pop();
         }
     }

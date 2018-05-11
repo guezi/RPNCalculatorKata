@@ -18,7 +18,7 @@ namespace RPNCalculatorKata
         {
             Value = value;
         }
-        public int GetValue()
+        public int Evaluate()
         {
             return Value;
         }
