@@ -8,17 +8,24 @@ namespace RPNCalculatorKata
 {
     class Number : IExpression
     {
-        public int Value { get; set; }
+        public TypeOpeator typeOp
+        {
+            get => TypeOpeator.NONE;
+
+        }
+        public IExpression Exp1 { get; set; }
+        public IExpression Exp2 { get; set; }
+        public double Value { get; set; }
         public Number(string  value)
         {
-            int.TryParse(value, out var val);
+            double.TryParse(value, out var val);
             Value = val;
         }
         public Number(int value)
         {
             Value = value;
         }
-        public int Evaluate()
+        public double Evaluate()
         {
             return Value;
         }
@@ -26,6 +33,11 @@ namespace RPNCalculatorKata
         public string Display()
         {
            return $"{Value}";
+        }
+
+        public IExpression Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }

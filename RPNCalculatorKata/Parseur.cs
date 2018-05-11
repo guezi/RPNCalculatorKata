@@ -9,7 +9,7 @@ namespace RPNCalculatorKata
 {
     public class Parseur
     {
-        private IList<string> Lemes = new List<string>() { @"^\d+$", @"^\+$", @"^-$", @"^\*$", "^/$", @"^\^$" };
+        private IList<string> Lemes = new List<string>() { @"^\d+$", @"^\+$", @"^-$", @"^\*$", "^/$", @"^\^$" ,"^Sin$"};
         private IList<Terme> Lexemes = new List<Terme>();
         public IList<string> Elements { get; set; }
         public string Texte { get; set; }
@@ -23,7 +23,7 @@ namespace RPNCalculatorKata
         {
             foreach (var element in Elements)
             {
-                if (Lemes.All(p => !Regex.IsMatch(element, p)))
+                if (Lemes.All(p => !Regex.IsMatch(element, p,RegexOptions.IgnoreCase)))
                 {
                     return false;
                 }

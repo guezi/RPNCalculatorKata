@@ -7,9 +7,21 @@ using System.Threading.Tasks;
 
 namespace RPNCalculatorKata
 {
-    class Operator : IExpression
+    class Operator : IExpression 
     {
+        readonly IDictionary<string, Func<double, double,double>> operatorDictionary = new Dictionary<string, Func<double, double,double>>(StringComparer.CurrentCultureIgnoreCase)
+        {
+            { "+",(p,k)=>p+k},
+            { "-",(p,k)=>p-k},
+            { "*",(p,k)=>p*k},
+            { "/",(p,k)=>p/k},
+            { "^",Math.Pow},
+            { "Sin",(p,k)=>Math.Sin(p)},
+            { "Cos",(p,k)=>Math.Cos(p)},
+
+        };
         private readonly string _element;
+        public TypeOpeator typeOp { get; set; }
         public IExpression Exp1 { get; set; }
         public IExpression Exp2 { get; set; }
 
@@ -22,29 +34,13 @@ namespace RPNCalculatorKata
             Exp1 = exp1;
             Exp2 = exp2;
         }
-        public int Evaluate()
+        public double Evaluate()
         {
             var value1 = Exp1.Evaluate();
             var value2 = Exp2.Evaluate();
-            if ("+".Equals(_element.Trim()))
+            if (operatorDictionary.TryGetValue(_element, out var ope))
             {
-                return value1 + value2;
-            }
-            if ("*".Equals(_element.Trim()))
-            {
-                return value1 *value2;
-            }
-            if ("-".Equals(_element.Trim()))
-            {
-                return value1 -value2;
-            }
-            if ("/".Equals(_element.Trim()))
-            {
-                return value1/ value2;
-            }
-            if ("^".Equals(_element.Trim()))
-            {
-                return (int) Math.Pow(value1 , value2);
+                return ope(value1,value2);
             }
             throw new EvaluateException();
         }
@@ -52,6 +48,11 @@ namespace RPNCalculatorKata
         public string Display()
         {
             return $"({Exp1.Display()}{_element}{Exp2.Display()})";
+        }
+
+        public IExpression Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }

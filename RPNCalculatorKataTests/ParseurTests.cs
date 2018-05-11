@@ -35,10 +35,10 @@ namespace RPNCalculatorKata.Tests
             Check.That(result).IsFalse();
         }
         [TestCase("125", 125, "125")]
-        [TestCase("1 2 +", 3, "(2+1)")]
+         [TestCase("1 2 +", 3, "(2+1)")]
         [TestCase("1 2 *", 2, "(2*1)")]
         [TestCase("1 2 -", 1, "(2-1)")]
-        [TestCase("5 -", -5, "(-1*5)")]
+       //  [TestCase("5 -", -5, "(-1*5)")]
         public void ValidateExpressionTest1(string expression, int result, string infixe)
         {
             var parseur = new Parseur();
@@ -49,12 +49,13 @@ namespace RPNCalculatorKata.Tests
             Check.That(infixe).Equals(display);
 
         }
-        [TestCase("3 5 8 * 7 + *", 141, "((7+(8*5))*3)")]
+          [TestCase("3 5 8 * 7 + *", 141, "((7+(8*5))*3)")]
         [TestCase("4 2 + 3 -", -3, "(3-(2+4))")]
         [TestCase("5 20 /", 4, "(20/5)")]
-        [TestCase("2 2 3 ^ ^", 81, "((3^2)^2)")]
-        [TestCase("3 3 3 ^ ^", 19683, "((3^3)^3)")]
-        [TestCase("4 3 2 ^ ^", 4096, "((2^3)^4)")]
+        [TestCase("2 3 ^", 9, "(3^2)")]
+         [TestCase("2 2 3 ^ ^", 81, "((3^2)^2)")]
+         [TestCase("3 3 3 ^ ^", 19683, "((3^3)^3)")]
+         [TestCase("4 3 2 ^ ^", 4096, "((2^3)^4)")]
         public void ValidateExpressionTest2(string expression, int result, string infixe)
         {
             var parseur = new Parseur();
@@ -83,8 +84,8 @@ namespace RPNCalculatorKata.Tests
         }
 
 
-        [TestCase("2 2 3 ^ ^", 81)]
-        [TestCase("3 3 3 ^ ^", 19683)]
+         [TestCase("2 2 3 ^ ^", 81)]
+         [TestCase("3 3 3 ^ ^", 19683)]
 
         public void ValidateExpressionTest5(string expression, int result )
         {
@@ -94,8 +95,9 @@ namespace RPNCalculatorKata.Tests
             Check.That(result).Equals(value);
         }
 
-        [TestCase("1 2 - -", -1, "(-1*(2-1))")]
-        public void ValidateExpressionTest10001(string expression, int result, string infixe)
+        [TestCase("0 Sin", 0, "Sin(0)")]
+        [TestCase("0 sin", 0, "Sin(0)")]
+        public void ValidateExpressionTest10001(string expression, double result, string infixe)
         {
             var parseur = new Parseur();
             parseur.Parser(expression);
@@ -103,7 +105,6 @@ namespace RPNCalculatorKata.Tests
             var display = parseur.GetExpression().Display();
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);
-
         }
     }
 }

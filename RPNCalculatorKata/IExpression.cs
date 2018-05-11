@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace RPNCalculatorKata
 {
-    public interface IExpression
+    public interface IExpression 
     {
-        int Evaluate(); 
-        string Display();
+        TypeOpeator typeOp {  get; } 
 
+        IExpression Exp1 { get; set; }
+          IExpression Exp2 { get; set; }
+        double Evaluate(); 
+        string Display();
+        IExpression Clone();
     }
 }
