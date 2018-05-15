@@ -8,16 +8,13 @@ namespace RPNCalculatorKata.Operators
 {
     class Divide : IExpression
     {
-        private readonly string _element;
-        public TypeOpeator typeOp
-        {
-            get => TypeOpeator.BI;
-           
-        }
+        public string DisplayName => "/";
+        public string Element { get; set; }
+        public TypeOpeator typeOp => TypeOpeator.BI;
 
-        public Divide(string element) 
+        public Divide() 
         {
-            _element = element;
+            Element = "/";
         }
 
         public IExpression Exp1 { get; set; }
@@ -29,11 +26,11 @@ namespace RPNCalculatorKata.Operators
 
         public string Display()
         {
-            return $"({Exp1.Display()}{_element}{Exp2.Display()})";
+            return $"({Exp1.Display()}{DisplayName}{Exp2.Display()})";
         }
-        public IExpression Clone()
+        public IExpression Clone( )
         {
-            return new Divide(_element);
+            return new Divide();
         }
     }
 }

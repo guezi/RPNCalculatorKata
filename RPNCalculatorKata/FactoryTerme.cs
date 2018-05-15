@@ -8,78 +8,67 @@ using RPNCalculatorKata.Operators;
 
 namespace RPNCalculatorKata
 {
-    public class FactoryTerme
+    public   class FactoryTerme
     {
-        static IDictionary<string, IExpression> operatorDictionary =
-            new Dictionary<string, IExpression>(StringComparer.CurrentCultureIgnoreCase)
+       public   readonly IDictionary<string, IExpression> MappingOperatorRegEx =
+            new Dictionary<string, IExpression>(StringComparer.InvariantCultureIgnoreCase)
             {
-                {"+", new Plus("+")},
-                {"-", new Minus("-")},
-                {"*", new Time("*")}, 
-                {"/", new Divide("/")},
-                {"^", new Power("^")},
-                {"Sin", new Sin("Sin")},
-                {"Cos", new Plus("+")},
+                {@"\+", new Plus()},
+                {"-", new Minus()},
+                {@"\*", new Time()},
+                {"/", new Divide()},
+                {"\\^", new Power()},
+                {"Sin", new Sin()},
+                {"Cos", new Cos()},
+                {@"^\d+(\.\d+)?$", new Number("0")},
             };
 
-        public static IExpression Instance(string element, Stack<IExpression> stack)
+        private   IExpression Instance(string element, Stack<IExpression> stack)
         {
-            if (operatorDictionary.TryGetValue(element, out var elem))
+            IExpression elementTemp =null;
+            foreach (var keyValuePair in MappingOperatorRegEx)
             {
-                var elem1 = elem.Clone();
-                if (elem1.typeOp == TypeOpeator.BI)
+                if (Regex.IsMatch(element, keyValuePair.Key, RegexOptions.IgnoreCase))
                 {
-                    elem1.Exp1 = stack.Pop();
-                    elem1.Exp2 = stack.Pop();
+                     elementTemp = keyValuePair.Value.Clone();
+                    switch (elementTemp.typeOp)
+                    {
+                        case TypeOpeator.PolyMorph when stack.Count == 1:
+                            elementTemp = new Number("-" + stack.Pop().Element);
+                            break;
+                        case TypeOpeator.BI:
+                        case TypeOpeator.PolyMorph:
+                            elementTemp.Exp1 = stack.Pop();
+                            elementTemp.Exp2 = stack.Pop();
+                            break;
+                        case TypeOpeator.MONO:
+                            elementTemp.Exp1 = stack.Pop();
+                            break;
+                        default:
+                            elementTemp.Element = element;
+                            break;
+                    }
+
+                    stack.Push(elementTemp);
+                   break;// elementTemp;
                 }
-                else
-                {
-                    elem1.Exp1 = stack.Pop();
-                }
-                
-                stack.Push(elem1);
-                return elem1;
             }
+            return elementTemp;
+            //  throw new ArgumentException($"Expression not correct : {element?.Trim()}");
+        }
 
-            if (Regex.IsMatch(element, @"^\d+$"))
+        public   IExpression GetExpression(string expression,IList<string> elements)
+        {
+            var stack = new Stack<IExpression>();
+            foreach (var element in elements)
             {
-                var ele = new Number(element);
-                stack.Push(ele);
-                return ele;
+                var ele =  Instance(element, stack);
             }
-            if (Regex.IsMatch(element, @"^-$") && (stack.Count == 1))
+            if (stack.Count != 1)
             {
-                var ele = new Operator("*");
-                ele.Exp1 = new Number(-1);
-                ele.Exp2 = stack.Pop();
-                stack.Push(ele);
-                return ele;
+                throw new ArgumentException($"Expression not correct : {expression?.Trim()}");
             }
-            if (Regex.IsMatch(element, @"^\+$|^-$|^\*$|^\^$|^/$"))
-            {
-                if (stack.Count < 2)
-                {
-                    throw new ArgumentException($"Expression not correct : {element?.Trim()}");
-                }
-
-                var ele = new Operator(element);
-                ele.Exp1 = stack.Pop();
-                ele.Exp2 = stack.Pop();
-                stack.Push(ele);
-
-                return ele;
-            }
-            if (Regex.IsMatch(element, @"^Sin$", RegexOptions.IgnoreCase))
-            {
-                var ele = new Operator(element);
-                ele.Exp1 = stack.Pop();
-                ele.Exp2 = new Number(-1);
-                stack.Push(ele);
-
-                return ele;
-            }
-
-            throw new ArgumentException($"Expression not correct : {element?.Trim()}");
+            return stack.Pop();
         }
     }
 }

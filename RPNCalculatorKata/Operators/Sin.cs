@@ -8,17 +8,18 @@ namespace RPNCalculatorKata.Operators
 {
     class Sin : IExpression
     {
+        public string DisplayName => "Sin";
         public TypeOpeator typeOp
         {
             get => TypeOpeator.MONO;
 
         }
 
-        private readonly string _element;
+        public string Element { get; set; }
 
-        public Sin(string element)
+        public Sin( )
         {
-            _element = element;
+            Element = "Sin";
         }
 
         public IExpression Exp1 { get; set; }
@@ -30,12 +31,12 @@ namespace RPNCalculatorKata.Operators
 
         public string Display()
         {
-            return $"{_element}({Exp1.Display()})";
+            return $"{DisplayName}({Exp1.Display()})";
         }
 
         public IExpression Clone()
         {
-            return new Sin(_element);
+            return new Sin();
         }
     }
 

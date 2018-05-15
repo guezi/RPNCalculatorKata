@@ -8,17 +8,19 @@ namespace RPNCalculatorKata.Operators
 {
   public  class Plus : IExpression
   {
-      public TypeOpeator typeOp
+      public string DisplayName => "+";
+
+        public TypeOpeator typeOp
       {
           get => TypeOpeator.BI;
 
       }
 
-        private string _element;
+      public string Element { get; set; }
 
-      public Plus(string element)
+        public Plus()
       {
-          _element = element;
+          Element = "+";
       }
        
         public IExpression Exp1 { get; set; }
@@ -30,12 +32,12 @@ namespace RPNCalculatorKata.Operators
 
         public string Display()
         {
-            return $"({Exp1.Display()}{_element}{Exp2.Display()})";
+            return $"({Exp1.Display()}{DisplayName}{Exp2.Display()})";
         }
 
       public IExpression Clone()
       {
-          return new Plus(_element);
+          return new Plus();
         }
   }
 }

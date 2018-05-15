@@ -8,6 +8,8 @@ namespace RPNCalculatorKata
 {
     public interface IExpression 
     {
+        string DisplayName { get; }
+        string Element { get; set; }
         TypeOpeator typeOp {  get; } 
 
         IExpression Exp1 { get; set; }

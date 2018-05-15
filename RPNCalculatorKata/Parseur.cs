@@ -9,10 +9,13 @@ namespace RPNCalculatorKata
 {
     public class Parseur
     {
-        private IList<string> Lemes = new List<string>() { @"^\d+$", @"^\+$", @"^-$", @"^\*$", "^/$", @"^\^$" ,"^Sin$"};
-        private IList<Terme> Lexemes = new List<Terme>();
         public IList<string> Elements { get; set; }
         public string Texte { get; set; }
+        private readonly FactoryTerme _factoryTerme;
+        public Parseur(FactoryTerme factoryTerme)
+        {
+            _factoryTerme= factoryTerme;
+        }
         public void Parser(string texte)
         {
             Texte = texte;
@@ -23,7 +26,7 @@ namespace RPNCalculatorKata
         {
             foreach (var element in Elements)
             {
-                if (Lemes.All(p => !Regex.IsMatch(element, p,RegexOptions.IgnoreCase)))
+                if (_factoryTerme.MappingOperatorRegEx.Keys.All(p => !Regex.IsMatch(element, p,RegexOptions.IgnoreCase)))
                 {
                     return false;
                 }
@@ -37,16 +40,7 @@ namespace RPNCalculatorKata
             {
                 throw new ArgumentException($"Expression not correct : {Texte}");
             }
-            var stack = new Stack<IExpression>();
-            foreach (var element in Elements)
-            {
-                var ele = FactoryTerme.Instance(element, stack);
-            }
-            if (stack.Count != 1)
-            {
-                throw new ArgumentException($"Expression not correct : {Texte?.Trim()}");
-            }
-            return stack.Pop();
+            return _factoryTerme.GetExpression(Texte, Elements);
         }
     }
 }

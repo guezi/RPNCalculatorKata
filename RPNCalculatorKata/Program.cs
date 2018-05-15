@@ -10,7 +10,7 @@ namespace RPNCalculatorKata
     {
         static void Main(string[] args)
         {
-            var parseur = new Parseur();
+            var parseur = new Parseur(new FactoryTerme ());
             string expression="4 3 2 1 + + +";
             parseur.Parser(expression);
             var result = parseur.ValidateExpression();

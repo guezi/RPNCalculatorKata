@@ -6,5 +6,6 @@
         MONO,
         BI,
         TRI,
+        PolyMorph,
     }
 }

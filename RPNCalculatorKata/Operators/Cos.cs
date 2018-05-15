@@ -6,37 +6,39 @@ using System.Threading.Tasks;
 
 namespace RPNCalculatorKata.Operators
 {
-    class Time : IExpression
+    class Cos : IExpression
     {
-        public string DisplayName => "*";
+        public string DisplayName => "Cos";
 
-        public string Element { get; set; }
         public TypeOpeator typeOp
         {
-            get => TypeOpeator.BI;
+            get => TypeOpeator.MONO;
 
         }
-        public Time()
+
+        public string Element { get; set; }
+
+        public Cos( )
         {
-            Element = "*";
+            Element = "Cos";
         }
 
         public IExpression Exp1 { get; set; }
         public IExpression Exp2 { get; set; }
+
         public double Evaluate()
         {
-            return Exp1.Evaluate() * Exp2.Evaluate();
+            return Math.Cos(Exp1.Evaluate());
         }
 
         public string Display()
         {
-            return $"({Exp1.Display()}{DisplayName}{Exp2.Display()})";
+            return $"{DisplayName}({Exp1.Display()})";
         }
 
         public IExpression Clone()
         {
-            return new Time();
+            return new Cos();
         }
     }
-
 }
