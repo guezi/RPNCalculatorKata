@@ -15,7 +15,7 @@ namespace RPNCalculatorKata
             parseur.Parser(expression);
             var result = parseur.ValidateExpression();
 
-            var value = parseur.GetExpression().Evaluate();
+            var value = parseur.BuildExpression().Evaluate;
 
             Console.WriteLine(value);
             Console.ReadKey();

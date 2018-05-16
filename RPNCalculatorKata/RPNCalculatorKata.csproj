@@ -43,19 +43,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FactoryTerme.cs" />
-    <Compile Include="Operators\Cos.cs" />
+    <Compile Include="Operators\AExpression.cs" />
+    <Compile Include="Operators\Trigonometrie\Cos.cs" />
     <Compile Include="Operators\IExpression.cs" />
-    <Compile Include="LexemeIEqualityComparer.cs" />
     <Compile Include="Operators\Number.cs" />
     <Compile Include="Operators\Divide.cs" />
     <Compile Include="Operators\Minus.cs" />
     <Compile Include="Operators\Plus.cs" />
     <Compile Include="Operators\Power.cs" />
-    <Compile Include="Operators\Sin.cs" />
+    <Compile Include="Operators\Trigonometrie\Sin.cs" />
     <Compile Include="Operators\Time.cs" />
     <Compile Include="Parseur.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeGrammaire.cs" />
     <Compile Include="TypeOpeator.cs" />
   </ItemGroup>
   <ItemGroup>

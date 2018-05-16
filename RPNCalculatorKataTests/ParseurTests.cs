@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using NFluent;
 using NUnit.Framework;
 using RPNCalculatorKata;
+using RPNCalculatorKata.Operators;
 
 namespace RPNCalculatorKataTests
 {
@@ -29,7 +31,7 @@ namespace RPNCalculatorKataTests
         [TestCase("125 356")]
         [TestCase("125 ")]
         [TestCase("125.1 ")]
-        public void When_Terme_Is_Correct_Then_ValidateExpression_True(string expression)
+        public void ValidateExpression_When_Terme_Is_Correct_Then_True(string expression)
         {
             _parseur.Parser(expression);
             var result = _parseur.ValidateExpression();
@@ -39,7 +41,7 @@ namespace RPNCalculatorKataTests
         [TestCase("x 356")]
         [TestCase("125.")]
         [TestCase(".1235")]
-        public void When_Terme_Is_NotCorrect_Then_ValidateExpression_False(string expression)
+        public void ValidateExpression_When_Terme_Is_NotCorrect_Then_False(string expression)
         {
             _parseur.Parser(expression);
             var result = _parseur.ValidateExpression();
@@ -49,11 +51,11 @@ namespace RPNCalculatorKataTests
         [TestCase("x 356")]
         [TestCase("125.")]
         [TestCase(".1235")]
-        public void When_Terme_Is_Correct_Then_GetExpression_ThrowException(string expression)
+        public void GetExpression_When_Terme_Is_Correct_Then_ThrowException(string expression)
         {
             _parseur.Parser(expression);
             var result = _parseur.ValidateExpression();
-            Check.ThatCode(() => _parseur.GetExpression()).Throws<ArgumentException>();
+            Check.ThatCode(() => _parseur.BuildExpression()).Throws<ArgumentException>();
         }
 
         [TestCase("123", "123")]
@@ -64,22 +66,35 @@ namespace RPNCalculatorKataTests
         [TestCase("1 2 ^", "^")]
         [TestCase(" 2 Sin", "Sin")]
         [TestCase(" 2 Cos", "Cos")]
-        public void When_Terme_Is_Correct_Then_GetExpression_Correct(string expression, string expected)
+        public void GetExpression_When_Terme_Is_Correct_Then_Correct(string expression, string expected)
         {
             _parseur.Parser(expression);
-            var result = _parseur.GetExpression();
+            var result = _parseur.BuildExpression();
             Check.That(result.Element).Equals(expected);
         }
-
-
+        
         [TestCase("1 2 +", 3, "(2+1)")]
         [TestCase("1 2 3 + +", 6, "((3+2)+1)")]
         [TestCase("1 2 3 4 + + +", 10, "(((4+3)+2)+1)")]
-        public void Wheen_Terme_Is_Correct_Then_Plus_GetExpression_Correct(string expression, int result, string infixe)
+        public void Plus_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe)
         {
             _parseur.Parser(expression);
-            var value = _parseur.GetExpression().Evaluate();
-            var display = _parseur.GetExpression().Display();
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
+            Check.That(result).Equals(value);
+            Check.That(infixe).Equals(display);
+
+        }
+        [TestCase("+ 1 2", 3, "(1+2)")]
+        [TestCase("+ + 1 2 3", 6, "((1+2)+3)")]
+        [TestCase("+ + + 1 2 3 4", 10, "(((1+2)+3)+4)")]
+        public void Plus_PreFixe__Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe) 
+        {
+            _factoryTerme = new FactoryTerme(TypeGrammaire.Prefixe);
+            _parseur = new Parseur(_factoryTerme);
+            _parseur.Parser(expression);
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);
 
@@ -88,11 +103,11 @@ namespace RPNCalculatorKataTests
         [TestCase("1 2 -", 1, "(2-1)")]
         [TestCase("1 2 3 - -", 0, "((3-2)-1)")]
         [TestCase("1 2 3 4 - - -", -2, "(((4-3)-2)-1)")]
-        public void Wheen_Terme_Is_Correct_Then_Minus_GetExpression_Correct(string expression, int result, string infixe)
+        public void Minus_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe)
         {
             _parseur.Parser(expression);
-            var value = _parseur.GetExpression().Evaluate();
-            var display = _parseur.GetExpression().Display();
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);
 
@@ -100,11 +115,11 @@ namespace RPNCalculatorKataTests
         [TestCase("1 2 *", 2, "(2*1)")]
         [TestCase("1 2 3 * *", 6, "((3*2)*1)")]
         [TestCase("1 2 3 4 * * *", 24, "(((4*3)*2)*1)")]
-        public void Wheen_Terme_Is_Correct_Then_Time_GetExpression_Correct(string expression, int result, string infixe)
+        public void Time_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe)
         {
             _parseur.Parser(expression);
-            var value = _parseur.GetExpression().Evaluate();
-            var display = _parseur.GetExpression().Display();
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);
 
@@ -114,11 +129,11 @@ namespace RPNCalculatorKataTests
         [TestCase("0 sin", 0, "Sin(0)")]
         [TestCase("3 sin", 3, "Sin(3)")]
         [TestCase("3.3 sin", 3.3, "Sin(3.3)")]
-        public void Wheen_Terme_Is_Correct_Then_Sin_GetExpression_Correct(string expression, double result, string infixe)
+        public void Sin_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, double result, string infixe)
         {
             _parseur.Parser(expression);
-            var value = _parseur.GetExpression().Evaluate();
-            var display = _parseur.GetExpression().Display();
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
             Check.That(Math.Sin(result)).Equals(value);
             Check.That(infixe).Equals(display);
         }
@@ -126,11 +141,11 @@ namespace RPNCalculatorKataTests
         [TestCase("1 cos", 1, "Cos(1)")]
         [TestCase("3 cos", 3, "Cos(3)")]
         [TestCase("3.3 cos", 3.3, "Cos(3.3)")]
-        public void Wheen_Terme_Is_Correct_Then_Cos_GetExpression_Correct(string expression, double result, string infixe)
+        public void Cos_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, double result, string infixe) 
         {
             _parseur.Parser(expression);
-            var value = _parseur.GetExpression().Evaluate();
-            var display = _parseur.GetExpression().Display();
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
             var cos = Math.Cos(result);
             Check.That(cos).Equals(value);
             Check.That(infixe).Equals(display);
@@ -148,8 +163,8 @@ namespace RPNCalculatorKataTests
         public void ValidateExpressionTest1(string expression, int result, string infixe)
         {
             _parseur.Parser(expression);
-            var value = _parseur.GetExpression().Evaluate();
-            var display = _parseur.GetExpression().Display();
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);
 
@@ -166,8 +181,8 @@ namespace RPNCalculatorKataTests
         public void ValidateExpressionTest2(string expression, int result, string infixe)
         {
             _parseur.Parser(expression);
-            var value = _parseur.GetExpression().Evaluate();
-            var display = _parseur.GetExpression().Display();
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
             Check.That(result).Equals(value);
             Check.That(infixe).Equals(display);
         }
@@ -176,7 +191,7 @@ namespace RPNCalculatorKataTests
         public void ValidateExpressionTest3(string expression, int result, string infixe)
         {
             _parseur.Parser(expression);
-            Check.ThatCode(() => _parseur.GetExpression()).Throws<Exception>().WithMessage("Expression not correct : 1 2 s");
+            Check.ThatCode(() => _parseur.BuildExpression()).Throws<Exception>().WithMessage("Expression not correct : 1 2 s");
         }
 
         [TestCase("  2 +")]
@@ -184,15 +199,15 @@ namespace RPNCalculatorKataTests
         public void ValidateExpressionTest4(string expression)
         {
             _parseur.Parser(expression);
-            Check.ThatCode(() => _parseur.GetExpression()).Throws<Exception>();//.WithMessage($"Expression not correct : {expression.Trim()}");
+            Check.ThatCode(() => _parseur.BuildExpression()).Throws<Exception>();//.WithMessage($"Expression not correct : {expression.Trim()}");
         }
 
-        [TestCase("2 2 3 ^ ^", 81)]
+        [TestCase("2 2 3 ^ +", 11)]
         [TestCase("3 3 3 ^ ^", 19683)]
-        public void ValidateExpressionTest5(string expression, int result)
+        public void __toto(string expression, int result)
         {
             _parseur.Parser(expression);
-            var value = _parseur.GetExpression().Evaluate();
+            var value = _parseur.BuildExpression().Evaluate;
             Check.That(result).Equals(value);
         }
 

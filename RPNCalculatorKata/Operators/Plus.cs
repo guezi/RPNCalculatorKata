@@ -6,38 +6,18 @@ using System.Threading.Tasks;
 
 namespace RPNCalculatorKata.Operators
 {
-  public  class Plus : IExpression
-  {
-      public string DisplayName => "+";
-
-        public TypeOpeator typeOp
-      {
-          get => TypeOpeator.BI;
-
-      }
-
-      public string Element { get; set; }
-
+  public  class Plus : AExpression
+    {
         public Plus()
-      {
-          Element = "+";
-      }
-       
-        public IExpression Exp1 { get; set; }
-        public IExpression Exp2 { get; set; }
-        public double Evaluate()
         {
-           return Exp1.Evaluate()+Exp2.Evaluate();
+            Element = "+";
         }
+        public override string DisplayName => "+";
+        public override TypeOpeator TypeOp { get; } = TypeOpeator.BI;
+        public override double Evaluate => Exp1.Evaluate + Exp2.Evaluate;
+        public override string Display => $"({Exp1.Display}{DisplayName}{Exp2.Display})";
+        public override IExpression Clone => new Plus();
+        public override string RegExForm  => @"\+";
 
-        public string Display()
-        {
-            return $"({Exp1.Display()}{DisplayName}{Exp2.Display()})";
-        }
-
-      public IExpression Clone()
-      {
-          return new Plus();
-        }
-  }
+    }
 }

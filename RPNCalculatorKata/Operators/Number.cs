@@ -2,34 +2,31 @@
 
 namespace RPNCalculatorKata.Operators
 {
-    class Number : IExpression
+    class Number : AExpression
     {
-        public string DisplayName => Element.ToString(CultureInfo.InvariantCulture);
-
-        public string Element { get; set; }
-        public TypeOpeator typeOp => TypeOpeator.NONE;
-        public IExpression Exp1 { get; set; }
-        public IExpression Exp2 { get; set; }
-       
-        public Number(string  value)
+        public Number():this("0")
+        {
+            
+        }
+        public Number(string value)
         {
             Element = value;
         }
-        
-        public double Evaluate()
-        {
-            double.TryParse(Element, out var val);
-            return val;
-        }
+        public override string DisplayName => Element.ToString(CultureInfo.InvariantCulture);
+        public override TypeOpeator TypeOp => TypeOpeator.NONE;
+      
 
-        public string Display()
+        public override double Evaluate
         {
-           return $"{DisplayName}";
+            get
+            {
+                double.TryParse(Element, out var val);
+                return val;
+            }
         }
+        public override string Display => $"{DisplayName}";
+        public override IExpression Clone => new Number("0");
+        public override string RegExForm  => @"^\d+(\.\d+)?$";
 
-        public IExpression Clone()
-        {
-            return new Number("0") ;
-        }
     }
 }

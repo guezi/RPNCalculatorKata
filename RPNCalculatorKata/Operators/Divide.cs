@@ -6,31 +6,17 @@ using System.Threading.Tasks;
 
 namespace RPNCalculatorKata.Operators
 {
-    class Divide : IExpression
+    class Divide :AExpression
     {
-        public string DisplayName => "/";
-        public string Element { get; set; }
-        public TypeOpeator typeOp => TypeOpeator.BI;
-
-        public Divide() 
+        public Divide()
         {
             Element = "/";
         }
-
-        public IExpression Exp1 { get; set; }
-        public IExpression Exp2 { get; set; }
-        public double Evaluate()
-        {
-            return Exp1.Evaluate()/ Exp2.Evaluate();
-        }
-
-        public string Display()
-        {
-            return $"({Exp1.Display()}{DisplayName}{Exp2.Display()})";
-        }
-        public IExpression Clone( )
-        {
-            return new Divide();
-        }
+        public override string DisplayName => "/";
+        public override TypeOpeator TypeOp => TypeOpeator.BI;
+        public override double Evaluate => Exp1.Evaluate / Exp2.Evaluate;
+        public override string Display => $"({Exp1.Display}{DisplayName}{Exp2.Display})";
+        public override IExpression Clone => new Divide();
+        public override string RegExForm  => "/";
     }
 }

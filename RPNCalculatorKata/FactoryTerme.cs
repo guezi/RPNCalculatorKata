@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using RPNCalculatorKata.Operators;
+using RPNCalculatorKata.Operators.Trigonometrie;
 
 namespace RPNCalculatorKata
 {
@@ -23,6 +25,18 @@ namespace RPNCalculatorKata
                 {@"^\d+(\.\d+)?$", new Number("0")},
             };
 
+        public FactoryTerme():this(TypeGrammaire.PostFixe)
+        {
+           
+        }
+
+        public FactoryTerme(TypeGrammaire typeGrammaire)
+        {
+            GrammarType = typeGrammaire;
+        }
+
+        public TypeGrammaire GrammarType { get; set; } 
+
         private   IExpression Instance(string element, Stack<IExpression> stack)
         {
             IExpression elementTemp =null;
@@ -30,8 +44,8 @@ namespace RPNCalculatorKata
             {
                 if (Regex.IsMatch(element, keyValuePair.Key, RegexOptions.IgnoreCase))
                 {
-                     elementTemp = keyValuePair.Value.Clone();
-                    switch (elementTemp.typeOp)
+                     elementTemp = keyValuePair.Value.Clone;
+                    switch (elementTemp.TypeOp)
                     {
                         case TypeOpeator.PolyMorph when stack.Count == 1:
                             elementTemp = new Number("-" + stack.Pop().Element);
@@ -57,9 +71,10 @@ namespace RPNCalculatorKata
             //  throw new ArgumentException($"Expression not correct : {element?.Trim()}");
         }
 
-        public   IExpression GetExpression(string expression,IList<string> elements)
+        public   IExpression BuildExpression(string expression,IList<string> elements) 
         {
             var stack = new Stack<IExpression>();
+            elements = TransformeByGrammarTyep(elements);
             foreach (var element in elements)
             {
                 var ele =  Instance(element, stack);
@@ -69,6 +84,16 @@ namespace RPNCalculatorKata
                 throw new ArgumentException($"Expression not correct : {expression?.Trim()}");
             }
             return stack.Pop();
+        }
+
+        private IList<string> TransformeByGrammarTyep(IList<string> elements)
+        {
+            if (GrammarType == TypeGrammaire.Prefixe)
+            {
+                return elements.Reverse().ToList();
+            }
+
+            return elements;
         }
     }
 }

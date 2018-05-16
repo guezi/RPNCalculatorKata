@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using RPNCalculatorKata.Operators;
 
 namespace RPNCalculatorKata
 {
@@ -18,15 +19,25 @@ namespace RPNCalculatorKata
         }
         public void Parser(string texte)
         {
+           
             Texte = texte;
             Elements = texte.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public bool ValidateExpression()
         {
+            var toto = GetType().Assembly.GetTypes()
+                .Where(p => p.GetInterface("IExpression", true) != null && !p.IsAbstract)
+                .Select(p => (IExpression)Activator.CreateInstance(p, null))
+                .Select(p => p.RegExForm)
+                .ToList();
             foreach (var element in Elements)
             {
-                if (_factoryTerme.MappingOperatorRegEx.Keys.All(p => !Regex.IsMatch(element, p,RegexOptions.IgnoreCase)))
+                //if (_factoryTerme.MappingOperatorRegEx.Keys.All(p => !Regex.IsMatch(element, p,RegexOptions.IgnoreCase)))
+                //{
+                //    return false;
+                //}
+                if (toto.All(p => !Regex.IsMatch(element, p, RegexOptions.IgnoreCase)))
                 {
                     return false;
                 }
@@ -34,13 +45,13 @@ namespace RPNCalculatorKata
             return true;
         }
 
-        public IExpression GetExpression()
+        public IExpression BuildExpression()
         {
             if (!ValidateExpression())
             {
                 throw new ArgumentException($"Expression not correct : {Texte}");
             }
-            return _factoryTerme.GetExpression(Texte, Elements);
+            return _factoryTerme.BuildExpression(Texte, Elements);
         }
     }
 }
