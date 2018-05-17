@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 using NFluent;
 using NUnit.Framework;
 using RPNCalculatorKata;
-using RPNCalculatorKata.Operators;
 
 namespace RPNCalculatorKataTests
 {
@@ -13,10 +11,12 @@ namespace RPNCalculatorKataTests
 
         private FactoryTerme _factoryTerme;
         private Parseur _parseur;
+        private MappingLexeme _map;
         [SetUp]
         public void Init()
         {
-            _factoryTerme = new FactoryTerme();
+            _map = new MappingLexeme();
+            _factoryTerme = new FactoryTerme(_map);
             _parseur = new Parseur(_factoryTerme);
         }
 
@@ -54,7 +54,7 @@ namespace RPNCalculatorKataTests
         public void GetExpression_When_Terme_Is_Correct_Then_ThrowException(string expression)
         {
             _parseur.Parser(expression);
-            var result = _parseur.ValidateExpression();
+            _parseur.ValidateExpression();
             Check.ThatCode(() => _parseur.BuildExpression()).Throws<ArgumentException>();
         }
 
@@ -72,11 +72,23 @@ namespace RPNCalculatorKataTests
             var result = _parseur.BuildExpression();
             Check.That(result.Element).Equals(expected);
         }
-        
         [TestCase("1 2 +", 3, "(2+1)")]
         [TestCase("1 2 3 + +", 6, "((3+2)+1)")]
         [TestCase("1 2 3 4 + + +", 10, "(((4+3)+2)+1)")]
         public void Plus_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe)
+        {
+            _parseur.Parser(expression);
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
+            Check.That(result).Equals(value);
+            Check.That(infixe).Equals(display);
+
+        }
+        [TestCase("1 2 sum", 3, "Sum(2+1)")]
+        [TestCase("1 2 3 sum", 6, "Sum(3+2+1)")]
+        [TestCase("4 3 2 1 0 sum", 10, "Sum(0+1+2+3+4)")]
+        [TestCase("4 3 + 1 0 sum", 8, "Sum(0+1+(3+4))")]
+        public void Sum_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe)
         {
             _parseur.Parser(expression);
             var value = _parseur.BuildExpression().Evaluate;
@@ -90,7 +102,7 @@ namespace RPNCalculatorKataTests
         [TestCase("+ + + 1 2 3 4", 10, "(((1+2)+3)+4)")]
         public void Plus_PreFixe__Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe) 
         {
-            _factoryTerme = new FactoryTerme(TypeGrammaire.Prefixe);
+            _factoryTerme = new FactoryTerme(_map,TypeGrammaire.Prefixe);
             _parseur = new Parseur(_factoryTerme);
             _parseur.Parser(expression);
             var value = _parseur.BuildExpression().Evaluate;
@@ -99,7 +111,7 @@ namespace RPNCalculatorKataTests
             Check.That(infixe).Equals(display);
 
         }
-        [TestCase("1 -", -1, "-1")]
+       // [TestCase("1 -", -1, "-1")]
         [TestCase("1 2 -", 1, "(2-1)")]
         [TestCase("1 2 3 - -", 0, "((3-2)-1)")]
         [TestCase("1 2 3 4 - - -", -2, "(((4-3)-2)-1)")]
@@ -112,10 +124,26 @@ namespace RPNCalculatorKataTests
             Check.That(infixe).Equals(display);
 
         }
+        [TestCase("1 2 Prod", 2, "Prod(2*1)")]
         [TestCase("1 2 *", 2, "(2*1)")]
         [TestCase("1 2 3 * *", 6, "((3*2)*1)")]
         [TestCase("1 2 3 4 * * *", 24, "(((4*3)*2)*1)")]
         public void Time_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe)
+        {
+            _parseur.Parser(expression);
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
+            Check.That(result).Equals(value);
+            Check.That(infixe).Equals(display);
+
+        }
+        [TestCase("1 !", 1, "(1)!")]
+        [TestCase("2 !", 2, "(2)!")]
+        [TestCase("3 !", 6, "(3)!")]
+        [TestCase("5 !", 120, "(5)!")]
+        [TestCase("6 !", 720, "(6)!")]
+        [TestCase("3 2 1 Sum !", 720, "(Sum(1+2+3))!")]
+        public void Fac_PostFixe_Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe) 
         {
             _parseur.Parser(expression);
             var value = _parseur.BuildExpression().Evaluate;
@@ -210,8 +238,5 @@ namespace RPNCalculatorKataTests
             var value = _parseur.BuildExpression().Evaluate;
             Check.That(result).Equals(value);
         }
-
-       
-
     }
 }

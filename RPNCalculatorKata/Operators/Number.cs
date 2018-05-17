@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace RPNCalculatorKata.Operators
 {
@@ -27,6 +28,10 @@ namespace RPNCalculatorKata.Operators
         public override string Display => $"{DisplayName}";
         public override IExpression Clone => new Number("0");
         public override string RegExForm  => @"^\d+(\.\d+)?$";
+        public override void SetUpExpression(string element, Stack<IExpression> stack)
+        {
+            Element = element;
+        }
 
     }
 }

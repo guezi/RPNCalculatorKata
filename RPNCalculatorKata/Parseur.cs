@@ -19,25 +19,17 @@ namespace RPNCalculatorKata
         }
         public void Parser(string texte)
         {
-           
             Texte = texte;
-            Elements = texte.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            var separator = new string[] { " " };
+            Elements = texte.Split(separator, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public bool ValidateExpression()
         {
-            var toto = GetType().Assembly.GetTypes()
-                .Where(p => p.GetInterface("IExpression", true) != null && !p.IsAbstract)
-                .Select(p => (IExpression)Activator.CreateInstance(p, null))
-                .Select(p => p.RegExForm)
-                .ToList();
+            var listOfRegExLeme = _factoryTerme.GetLexemes();
             foreach (var element in Elements)
             {
-                //if (_factoryTerme.MappingOperatorRegEx.Keys.All(p => !Regex.IsMatch(element, p,RegexOptions.IgnoreCase)))
-                //{
-                //    return false;
-                //}
-                if (toto.All(p => !Regex.IsMatch(element, p, RegexOptions.IgnoreCase)))
+                if (listOfRegExLeme.All(p => !Regex.IsMatch(element, p, RegexOptions.IgnoreCase)))
                 {
                     return false;
                 }
