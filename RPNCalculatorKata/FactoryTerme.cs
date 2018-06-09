@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using RPNCalculatorKata.Operators;
-using RPNCalculatorKata.Operators.Arithmetique;
-using RPNCalculatorKata.Operators.Trigonometrie;
 
 namespace RPNCalculatorKata
 {
     public class FactoryTerme
     {
-        public MappingLexeme MappingLexemes;
+        public IMappingLexeme MappingLexemes { get; set; }
         private TypeGrammaire GrammarType { get; set; }
 
-        public FactoryTerme(MappingLexeme mappingLexemes, TypeGrammaire typeGrammaire = TypeGrammaire.PostFixe)
+        public FactoryTerme(IMappingLexeme mappingLexemes, TypeGrammaire typeGrammaire = TypeGrammaire.PostFixe)
         {
             MappingLexemes = mappingLexemes;
             GrammarType = typeGrammaire;
@@ -28,7 +23,7 @@ namespace RPNCalculatorKata
                 if (Regex.IsMatch(element, keyValuePair.Key, RegexOptions.IgnoreCase))
                 {
                     var elementTemp = keyValuePair.Value.Clone;
-                    elementTemp.SetUpExpression(element, stack);
+                    elementTemp.PopExpressionInStarck(element, stack);
                     stack.Push(elementTemp);
                     break;
                 }

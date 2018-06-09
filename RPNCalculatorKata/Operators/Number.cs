@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace RPNCalculatorKata.Operators
@@ -14,21 +15,22 @@ namespace RPNCalculatorKata.Operators
             Element = value;
         }
         public override string DisplayName => Element.ToString(CultureInfo.InvariantCulture);
-        public override TypeOpeator TypeOp => TypeOpeator.NONE;
+        public override TypeOpeator TypeOp => TypeOpeator.None;
       
 
         public override double Evaluate
         {
             get
             {
-                double.TryParse(Element, out var val);
+                double val;
+              var boo=  Double.TryParse(Element, NumberStyles.Number, CultureInfo.InvariantCulture, out  val);
                 return val;
             }
         }
         public override string Display => $"{DisplayName}";
         public override IExpression Clone => new Number("0");
-        public override string RegExForm  => @"^\d+(\.\d+)?$";
-        public override void SetUpExpression(string element, Stack<IExpression> stack)
+        public override string RegExForm  => @"^-?\d+(\.\d+)?$";
+        public override void PopExpressionInStarck(string element, Stack<IExpression> stack)
         {
             Element = element;
         }

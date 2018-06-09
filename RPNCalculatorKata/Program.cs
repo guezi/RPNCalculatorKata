@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPNCalculatorKata
 {
@@ -10,12 +6,12 @@ namespace RPNCalculatorKata
     {
         static void Main(string[] args)
         {
-            var map=new MappingLexeme();
+            IMappingLexeme map =new MappingLexeme();
             var factoryTerme = new FactoryTerme (map); 
             var parseur = new Parseur(factoryTerme);
             string expression="4 3 2 1 + + +";
             parseur.Parser(expression);
-            var result = parseur.ValidateExpression();
+            parseur.ValidateExpression();
 
             var value = parseur.BuildExpression().Evaluate;
 

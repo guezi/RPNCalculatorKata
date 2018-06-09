@@ -43,10 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FactoryTerme.cs" />
+    <Compile Include="IMappingLexeme.cs" />
     <Compile Include="MappingLexeme.cs" />
     <Compile Include="Operators\AExpression.cs" />
     <Compile Include="Operators\Arithmetique\Fac.cs" />
     <Compile Include="Operators\Arithmetique\Prod.cs" />
+    <Compile Include="Operators\Logicals\IF.cs" />
     <Compile Include="Operators\Trigonometrie\Cos.cs" />
     <Compile Include="Operators\IExpression.cs" />
     <Compile Include="Operators\Number.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="Operators\Arithmetique\Minus.cs" />
     <Compile Include="Operators\Arithmetique\Plus.cs" />
     <Compile Include="Operators\Arithmetique\Power.cs" />
+    <Compile Include="Operators\Trigonometrie\Pi.cs" />
     <Compile Include="Operators\Trigonometrie\Sin.cs" />
     <Compile Include="Operators\Arithmetique\Time.cs" />
     <Compile Include="Operators\Arithmetique\Sum.cs" />

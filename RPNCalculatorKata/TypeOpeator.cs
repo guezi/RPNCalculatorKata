@@ -2,10 +2,10 @@
 {
   public  enum TypeOpeator
     {
-        NONE,
-        MONO,
-        BI,
-        TRI,
+        None,
+        Mono,
+        Bi,
+        Tri,
         PolyMorph,
     }
 }

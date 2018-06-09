@@ -10,12 +10,12 @@ namespace RPNCalculatorKata.Operators.Trigonometrie
             Element = "Cos";
         }
         public override string DisplayName => "Cos";
-        public override TypeOpeator TypeOp { get; } = TypeOpeator.MONO;
+        public override TypeOpeator TypeOp { get; } = TypeOpeator.Mono;
         public override double Evaluate => Math.Cos(Expressions[0].Evaluate);
         public override string Display => $"{DisplayName}({Expressions[0].Display})";
         public override IExpression Clone => new Cos();
         public override string RegExForm => "Cos";
-        public override void SetUpExpression(string element, Stack<IExpression> stack)
+        public override void PopExpressionInStarck(string element, Stack<IExpression> stack)
         {
             Expressions.Add(stack.Pop());
         }

@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.SqlServer.Server;
 using RPNCalculatorKata.Operators;
 
 namespace RPNCalculatorKata
 {
-   public class MappingLexeme
+    public class MappingLexeme : IMappingLexeme
     {
-        private List<IExpression> _listOfRegExLeme;
+        private readonly List<IExpression> _listOfRegExLeme;
         public MappingLexeme()
         {
              _listOfRegExLeme = GetType().Assembly.GetTypes()

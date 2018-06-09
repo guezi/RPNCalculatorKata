@@ -11,12 +11,12 @@ namespace RPNCalculatorKata.Operators.Arithmetique
             Element = "Prod";
         }
         public override string DisplayName => "Prod";
-        public override TypeOpeator TypeOp { get; } = TypeOpeator.BI;
+        public override TypeOpeator TypeOp { get; } = TypeOpeator.Bi;
         public override double Evaluate => Expressions.Aggregate(1.0,(prod,next) => prod*next.Evaluate);
         public override string Display => $"{DisplayName}({string.Join(Separator, Expressions.Select(p => p.Display))})";
         public override IExpression Clone => new Prod();
         public override string RegExForm => "Prod";
-        public override void SetUpExpression(string element, Stack<IExpression> stack)
+        public override void PopExpressionInStarck(string element, Stack<IExpression> stack)
         {
             var stackCount = stack.Count;
             for (int i = 0; i < stackCount; i++)

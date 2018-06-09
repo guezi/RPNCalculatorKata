@@ -11,7 +11,7 @@ namespace RPNCalculatorKataTests
 
         private FactoryTerme _factoryTerme;
         private Parseur _parseur;
-        private MappingLexeme _map;
+        private IMappingLexeme _map;
         [SetUp]
         public void Init()
         {
@@ -162,8 +162,9 @@ namespace RPNCalculatorKataTests
             _parseur.Parser(expression);
             var value = _parseur.BuildExpression().Evaluate;
             var display = _parseur.BuildExpression().Display;
-            Check.That(Math.Sin(result)).Equals(value);
             Check.That(infixe).Equals(display);
+            Check.That(Math.Sin(result)).Equals(value);
+            
         }
         [TestCase("0 Cos", 0, "Cos(0)")]
         [TestCase("1 cos", 1, "Cos(1)")]
@@ -174,9 +175,9 @@ namespace RPNCalculatorKataTests
             _parseur.Parser(expression);
             var value = _parseur.BuildExpression().Evaluate;
             var display = _parseur.BuildExpression().Display;
-            var cos = Math.Cos(result);
-            Check.That(cos).Equals(value);
+            var cos = Math.Cos(result);          
             Check.That(infixe).Equals(display);
+            Check.That(cos).Equals(value);
         }
 
         //*******************************************************************************************************************
@@ -230,13 +231,38 @@ namespace RPNCalculatorKataTests
             Check.ThatCode(() => _parseur.BuildExpression()).Throws<Exception>();//.WithMessage($"Expression not correct : {expression.Trim()}");
         }
 
-        [TestCase("2 2 3 ^ +", 11)]
-        [TestCase("3 3 3 ^ ^", 19683)]
+         
+        [TestCase("pi 1 +", 19683)]
         public void __toto(string expression, int result)
         {
             _parseur.Parser(expression);
             var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
+            Check.That(Math.PI+1).Equals(value);
+            Check.That("(1+Pi)").Equals(display);
+        }
+
+        [TestCase()]
+        public void main()
+        {
+            
+                double val;
+                var boo = double.TryParse("3,3", out val);
+                Check.That(3.3).Equals(val);
+             
+        }
+
+        [TestCase("if if -1 2 -3 2 -3 ", -3, "IF[IF[-1,2,-3],2,-3]")]       
+        public void IF_PreFixe__Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe)
+        {
+            _factoryTerme = new FactoryTerme(_map, TypeGrammaire.Prefixe);
+            _parseur = new Parseur(_factoryTerme);
+            _parseur.Parser(expression);
+            var value = _parseur.BuildExpression().Evaluate;
+            var display = _parseur.BuildExpression().Display;
             Check.That(result).Equals(value);
+            Check.That(infixe).Equals(display);
+
         }
     }
 }

@@ -17,7 +17,7 @@ namespace RPNCalculatorKata.Operators
         public abstract string Display { get; }
         public abstract IExpression Clone { get; }
         public abstract string RegExForm { get; }
-        public abstract void SetUpExpression(string element, Stack<IExpression> stack);
+        public abstract void PopExpressionInStarck(string element, Stack<IExpression> stack);
 
     }
 }
