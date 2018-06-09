@@ -252,7 +252,7 @@ namespace RPNCalculatorKataTests
              
         }
 
-        [TestCase("if if -1 2 -3 2 -3 ", -3, "IF[IF[-1,2,-3],2,-3]")]       
+        [TestCase("if if -1 2 -3 2 -3 ", -3, "IF[IF[-1,2,-3],2,-3]" )]       
         public void IF_PreFixe__Wheen_Terme_Is_Correct_Then_GetExpression_Correct(string expression, int result, string infixe)
         {
             _factoryTerme = new FactoryTerme(_map, TypeGrammaire.Prefixe);
